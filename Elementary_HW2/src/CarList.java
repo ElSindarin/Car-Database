@@ -1,27 +1,28 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Iterator;
+import java.util.*;
 
 public class CarList {
 
     Map<String, Car> carList = new HashMap<>();
 
     public Car createCar() {
-        Car newCar = new Car();
-        System.out.println("Введите VIN-код автомобиля");
+
         Scanner sc = new Scanner(System.in);
-        newCar.setVin(sc.nextLine());
+        String vin, reg, brand, model;
+        short year;
+        int mileage;
+        System.out.println("Введите VIN-код автомобиля");
+        vin = sc.nextLine();
         System.out.println("Введите регистрационный номер автомобиля:");
-        newCar.setRegNumber(sc.nextLine());
+        reg = sc.nextLine();
         System.out.println("Введите марку автомобиля:");
-        newCar.setBrand(sc.nextLine());
+        brand = sc.nextLine();
         System.out.println("Введите модель автомобиля:");
-        newCar.setModel(sc.nextLine());
+        model = sc.nextLine();
         System.out.println("Введите год выпуска автомобиля:");
-        newCar.setYear(sc.nextShort());
+        year = sc.nextShort();
         System.out.println("Введите пробег автомобиля:");
-        newCar.setMileage(sc.nextInt());
+        mileage = sc.nextInt();
+        Car newCar = new Car(vin, reg, brand, model, year, mileage);
         return newCar;
     }
 
@@ -93,12 +94,10 @@ public class CarList {
         if (lowerYear != 0) {
             System.out.println("Теперь введите год, на котором хотите завершить удаление:");
             upperYear = sc.nextShort();
-            for(Iterator iterator = carList.entrySet().iterator();iterator.hasNext();)
-            {
-                Map.Entry element = (Map.Entry)iterator.next();
-                Car car = (Car) element.getValue();
+            for (String vin : carList.keySet()) {
+                Car car = carList.get(vin);
                 if ((car.getYear() >= lowerYear) && (car.getYear() <= upperYear)) {
-                    carList.remove(element.getKey());
+                    carList.remove(vin);
                 }
             }
             removeByYear();
@@ -137,11 +136,13 @@ public class CarList {
         Scanner sc = new Scanner(System.in);
         regNumber = sc.nextLine();
         if (!regNumber.equals("0")) {
-            if (carList.containsKey(regNumber)) {
-                System.out.println("В базе данных найдена машина с указанным регистрационным номером.");
-                wasFound = true;
-                searchCarByRegNum();
-
+            for (String vin: carList.keySet()) {
+                Car car = carList.get(vin);
+                if (car.getRegNumber().equals(regNumber)) {
+                    System.out.println("В базе данных найдена машина с указанным регистрационным номером.");
+                    wasFound = true;
+                    searchCarByRegNum();
+                }
             }
             if (!wasFound) {
                 System.out.println("Автомобиль с указанным регистрационным номером отсутствует в базе данных");
@@ -159,10 +160,8 @@ public class CarList {
             System.out.println("По данному запросу найдены следующие автомобили");
             System.out.println("  VIN-код   Рег. №   Марка   Модель  Год выпуска  Пробег");
             int i = 0;
-            for(Iterator iterator = carDataBase.carList.entrySet().iterator();iterator.hasNext();i++)
-            {
-                Map.Entry element = (Map.Entry)iterator.next();
-                Car car = (Car)element.getValue();
+            for (String vin : carList.keySet()) {
+                Car car = carList.get(vin);
                 System.out.print(i + 1 + ". " + car.getVin() + "\t");
                 System.out.print(car.getRegNumber() + "\t");
                 System.out.print(car.getBrand() + "\t");
@@ -183,10 +182,8 @@ public class CarList {
         if (!brand.equals("0")) {
             System.out.println("Теперь введите модель:");
             model = sc.nextLine();
-            for(Iterator iterator = carList.entrySet().iterator();iterator.hasNext();)
-            {
-                Map.Entry element = (Map.Entry)iterator.next();
-                Car car = (Car)element.getValue();
+            for(String vin: carList.keySet()) {
+                Car car = carList.get(vin);
                 if (car.getBrand().equals(brand) && (car.getModel().equals(model))) {
                     searchResult.carList.put(car.getVin(),car);
                 }
@@ -207,12 +204,10 @@ public class CarList {
         if (lowerYear != 0) {
             System.out.println("Теперь введите год, которым хотите завершить фильтр:");
             upperYear = sc.nextShort();
-            for(Iterator iterator = carList.entrySet().iterator();iterator.hasNext();)
-            {
-                Map.Entry element = (Map.Entry)iterator.next();
-                Car car = (Car)element.getValue();
+            for (String vin: carList.keySet()) {
+                Car car = carList.get(vin);
                 if (car.getYear() >= lowerYear && (car.getYear() <= upperYear)) {
-                    searchResult.carList.put(car.getVin(),car);
+                    searchResult.carList.put(car.getVin(), car);
                 }
             }
             searchResult.showCarList(searchResult);
@@ -231,10 +226,8 @@ public class CarList {
         if (lowerMileage != 0) {
             System.out.println("Теперь введите показания одометра, которыми хотите завершить фильтр:");
             upperMileage = sc.nextInt();
-            for(Iterator iterator = carList.entrySet().iterator();iterator.hasNext();)
-            {
-                Map.Entry element = (Map.Entry)iterator.next();
-                Car car = (Car)element.getValue();
+            for (String vin: carList.keySet()) {
+                Car car = carList.get(vin);
                 if (car.getMileage() >= lowerMileage && (car.getMileage() <= upperMileage)) {
                     searchResult.carList.put(car.getVin(),car);
                 }
@@ -247,5 +240,3 @@ public class CarList {
     }
 
 }
-
-//НАПИСАТЬ МЕНЮ УДАЛЕНИЯ И ФУНКЦИОНАЛ!
