@@ -1,5 +1,5 @@
 public class Car {
-    private String vin;
+    private final String vin;
     private String regNumber;
     private String brand;
     private String model;
