@@ -38,4 +38,14 @@ public class Car {
     public int getMileage() {
         return mileage;
     }
+
+    @Override
+    public String toString() {
+        return  "VIN-код: " + vin +
+                ", Рег. №: " + regNumber +
+                ", Марка: " + brand +
+                ", Модель: " + model +
+                ", Год выпуска: " + year +
+                ", Пробег: " + mileage;
+    }
 }

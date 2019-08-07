@@ -146,10 +146,4 @@ public class Main {
         System.out.println("3 - Очистка всей базы данных автомобилей");
         System.out.println("0 - Вернуться в предыдущее меню");
     }
-  /*  public static String requestReturn () {
-        System.out.println("Вы можете продолжить действовать в рамках выбранной опции. Для возврата в предыдущее меню нажмите 0");
-        Scanner sc = new Scanner(System.in);
-        String request = sc.nextLine();
-        return request;
-    } */
 }

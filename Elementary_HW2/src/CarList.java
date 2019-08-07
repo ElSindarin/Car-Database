@@ -5,25 +5,11 @@ public class CarList {
     Map<String, Car> carList = new HashMap<>();
 
     public Car createCar() {
-
         Scanner sc = new Scanner(System.in);
-        String vin, reg, brand, model;
-        short year;
-        int mileage;
+        String vin;
         System.out.println("Введите VIN-код автомобиля");
         vin = sc.nextLine();
-        System.out.println("Введите регистрационный номер автомобиля:");
-        reg = sc.nextLine();
-        System.out.println("Введите марку автомобиля:");
-        brand = sc.nextLine();
-        System.out.println("Введите модель автомобиля:");
-        model = sc.nextLine();
-        System.out.println("Введите год выпуска автомобиля:");
-        year = sc.nextShort();
-        System.out.println("Введите пробег автомобиля:");
-        mileage = sc.nextInt();
-        Car newCar = new Car(vin, reg, brand, model, year, mileage);
-        return newCar;
+        return assignDataToVin(vin);
     }
 
     public void addCar() {
@@ -43,9 +29,8 @@ public class CarList {
         if (!regNumber.equals("0")) {
             if (carList.containsKey(regNumber)) {
                 System.out.println("В базе данных найдена машина с указанным VIN-кодом. Переходим к обновлению информации");
-                carList.remove(regNumber);
-                editedCar = createCar();
-                carList.put(editedCar.getVin(), editedCar);
+                editedCar = assignDataToVin(regNumber);
+                carList.put(editedCar.getVin(),editedCar);
                 wasEdited = true;
                 editCar();
             }
@@ -70,7 +55,6 @@ public class CarList {
                 carList.remove(regNumber);
                 wasDeleted = true;
                 removeCar();
-
             }
             if (!wasDeleted) {
                 System.out.println("Автомобиль с указанным VIN-кодом отсутствует в базе данных");
@@ -94,10 +78,10 @@ public class CarList {
         if (lowerYear != 0) {
             System.out.println("Теперь введите год, на котором хотите завершить удаление:");
             upperYear = sc.nextShort();
-            for (String vin : carList.keySet()) {
-                Car car = carList.get(vin);
+            for (Iterator<Car> iterator = carList.values().iterator();iterator.hasNext();) {
+                Car car = iterator.next();
                 if ((car.getYear() >= lowerYear) && (car.getYear() <= upperYear)) {
-                    carList.remove(vin);
+                    iterator.remove();
                 }
             }
             removeByYear();
@@ -136,8 +120,7 @@ public class CarList {
         Scanner sc = new Scanner(System.in);
         regNumber = sc.nextLine();
         if (!regNumber.equals("0")) {
-            for (String vin: carList.keySet()) {
-                Car car = carList.get(vin);
+            for (Car car : carList.values()) {
                 if (car.getRegNumber().equals(regNumber)) {
                     System.out.println("В базе данных найдена машина с указанным регистрационным номером.");
                     wasFound = true;
@@ -158,17 +141,11 @@ public class CarList {
             System.out.println("Нет данных для отображения!");
         } else {
             System.out.println("По данному запросу найдены следующие автомобили");
-            System.out.println("  VIN-код   Рег. №   Марка   Модель  Год выпуска  Пробег");
             int i = 0;
-            for (String vin : carList.keySet()) {
-                Car car = carList.get(vin);
-                System.out.print(i + 1 + ". " + car.getVin() + "\t");
-                System.out.print(car.getRegNumber() + "\t");
-                System.out.print(car.getBrand() + "\t");
-                System.out.print(car.getModel() + "\t");
-                System.out.print(car.getYear() + "\t");
-                System.out.print(car.getMileage() + "\t");
-                System.out.println();
+            for (Car car : carList.values()) {
+                System.out.print(i + 1 + ". ");
+                System.out.println(car.toString());
+                i++;
             }
         }
     }
@@ -182,8 +159,7 @@ public class CarList {
         if (!brand.equals("0")) {
             System.out.println("Теперь введите модель:");
             model = sc.nextLine();
-            for(String vin: carList.keySet()) {
-                Car car = carList.get(vin);
+            for(Car car : carList.values()) {
                 if (car.getBrand().equals(brand) && (car.getModel().equals(model))) {
                     searchResult.carList.put(car.getVin(),car);
                 }
@@ -204,8 +180,7 @@ public class CarList {
         if (lowerYear != 0) {
             System.out.println("Теперь введите год, которым хотите завершить фильтр:");
             upperYear = sc.nextShort();
-            for (String vin: carList.keySet()) {
-                Car car = carList.get(vin);
+            for (Car car : carList.values()) {
                 if (car.getYear() >= lowerYear && (car.getYear() <= upperYear)) {
                     searchResult.carList.put(car.getVin(), car);
                 }
@@ -226,8 +201,7 @@ public class CarList {
         if (lowerMileage != 0) {
             System.out.println("Теперь введите показания одометра, которыми хотите завершить фильтр:");
             upperMileage = sc.nextInt();
-            for (String vin: carList.keySet()) {
-                Car car = carList.get(vin);
+            for (Car car : carList.values()) {
                 if (car.getMileage() >= lowerMileage && (car.getMileage() <= upperMileage)) {
                     searchResult.carList.put(car.getVin(),car);
                 }
@@ -239,4 +213,21 @@ public class CarList {
         }
     }
 
+    public static Car assignDataToVin (String vin) {
+        Scanner sc = new Scanner(System.in);
+        String reg, brand, model;
+        short year;
+        int mileage;
+        System.out.println("Введите регистрационный номер автомобиля:");
+        reg = sc.nextLine();
+        System.out.println("Введите марку автомобиля:");
+        brand = sc.nextLine();
+        System.out.println("Введите модель автомобиля:");
+        model = sc.nextLine();
+        System.out.println("Введите год выпуска автомобиля:");
+        year = sc.nextShort();
+        System.out.println("Введите пробег автомобиля:");
+        mileage = sc.nextInt();
+        return new Car(vin, reg, brand, model, year, mileage);
+    }
 }
