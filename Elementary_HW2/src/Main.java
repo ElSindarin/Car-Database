@@ -30,6 +30,10 @@ public class Main {
                     callDeleteMenu(carDataBase);
                     break;
                 }
+                case 5: {
+                    callSortMenu(carDataBase);
+                    break;
+                }
                 case 0: {
                     continue mainMenu;
                 }
@@ -47,7 +51,7 @@ public class Main {
     public static void callSearchMenu(CarList carDataBase) {
         Scanner sc = new Scanner(System.in);
         byte number = 0;
-               searchMenu: while (number != -1) {
+               while (number != -1) {
             showSearchMenu();
             number = sc.nextByte();
             switch (number) {
@@ -90,7 +94,7 @@ public class Main {
     public static void callDeleteMenu (CarList carDataBase) {
         Scanner sc = new Scanner(System.in);
         byte number = 0;
-        searchMenu: while (number != -1) {
+        while (number != -1) {
             showDeleteMenu();
             number = sc.nextByte();
             switch (number) {
@@ -115,7 +119,44 @@ public class Main {
                 }
             }
         }
+    }
 
+    public static void callSortMenu (CarList carDataBase) {
+        Scanner sc = new Scanner(System.in);
+        byte number = 0;
+        while (number != -1) {
+            showSortMenu();
+            number = sc.nextByte();
+            switch (number) {
+                case 1: {
+                    carDataBase.sortByBrand();
+                    break;
+                }
+                case 2: {
+                    carDataBase.sortByModel();
+                    break;
+                }
+                case 3: {
+                    carDataBase.sortByYear();
+                    break;
+                }
+                case 4: {
+                    carDataBase.sortByMileage();
+                    break;
+                }
+                case 5: {
+                    carDataBase.sortByBrandAndModel();
+                    break;
+                }
+                case 0: {
+                    return;
+                }
+                default: {
+                    System.out.println("Выбранная вами опция не существует!");
+                    break;
+                }
+            }
+        }
     }
 
     public static void showMainMenuText () {
@@ -124,6 +165,7 @@ public class Main {
         System.out.println("2 - Внести автомобиль в базу данных");
         System.out.println("3 - Редактировать информацию об автомобиле по VIN-коду");
         System.out.println("4 - Открыть меню удаления информации");
+        System.out.println("5 - Открыть меню сортировки");
         System.out.println("0 - Вернуться в предыдущее меню");
         System.out.println("-1 - Завершить программу");
     }
@@ -144,6 +186,22 @@ public class Main {
         System.out.println("1 - Удаление автомобиля по VIN-коду");
         System.out.println("2 - Удаление автомобиля по году выпуска от ... и до ...");
         System.out.println("3 - Очистка всей базы данных автомобилей");
+        System.out.println("0 - Вернуться в предыдущее меню");
+    }
+
+    public static void showSortMenu () {
+        System.out.println("Активировано меню сортировки:");
+        System.out.println("1 - Сортировать по марке автомобиля");
+        System.out.println("2 - Сортировать по модели автомобиля");
+        System.out.println("3 - Сортировать по году выпуска автомобиля");
+        System.out.println("4 - Сортировать по пробегу автомобиля");
+        System.out.println("5 - Сортировать по марке, а затем по модели автомобиля");
+        /*
+        System.out.println("1 - Добавить поле сортировки по марке автомобиля");
+        System.out.println("2 - Добавить поле сортировки по модели автомобиля");
+        System.out.println("3 - Добавить поле сортировки по году выпуска автомобиля");
+        System.out.println("4 - Добавить поле сортировки по пробегу автомобиля");
+        System.out.println("5 - Выполнить сортировку");*/
         System.out.println("0 - Вернуться в предыдущее меню");
     }
 }

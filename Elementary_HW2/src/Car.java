@@ -3,10 +3,10 @@ public class Car {
     private String regNumber;
     private String brand;
     private String model;
-    private short year;
-    private int mileage;
+    private Integer year;
+    private Integer mileage;
 
-    public Car(String vin, String regNumber, String brand, String model, short year, int mileage) {
+    public Car(String vin, String regNumber, String brand, String model, Integer year, Integer mileage) {
         this.vin = vin;
         this.regNumber = regNumber;
         this.brand = brand;
@@ -31,12 +31,32 @@ public class Car {
         return model;
     }
 
-    public short getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public int getMileage() {
+    public Integer getMileage() {
         return mileage;
+    }
+
+    public void setRegNumber(String regNumber) {
+        this.regNumber = regNumber;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public void setMileage(Integer mileage) {
+        this.mileage = mileage;
     }
 
     @Override
