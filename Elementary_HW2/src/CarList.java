@@ -34,17 +34,7 @@ public class CarList {
         if (!regNumber.equals("0")) {
             if (carList.containsKey(regNumber)) {
                 System.out.println("В базе данных найдена машина с указанным VIN-кодом. Переходим к обновлению информации");
-                Pattern pattern = Pattern.compile("^[A-Z][A-Z]{1}\\d{4}[A-Z][A-Z]$");
-                Matcher matcher;
-                String reg;
-                do {
-                    System.out.println("Введите регистрационный номер автомобиля:");
-                    reg = sc.nextLine();
-                    matcher = pattern.matcher(reg);
-                    if (!matcher.find(0)) {
-                        System.out.println("Недопустимый формат регистрационного номера. Необходимо повторить процедуру ввода.");
-                    }
-                } while (!matcher.find(0));
+                String reg = checkValidity();
                 carList.get(regNumber).setRegNumber(reg);
                 System.out.println("Введите марку автомобиля:");
                 carList.get(regNumber).setBrand(sc.nextLine());
@@ -278,19 +268,10 @@ public class CarList {
 
     public static Car assignDataToVin (String vin) {
         Scanner sc = new Scanner(System.in);
-        String reg, brand, model;
+        String brand, model;
         Integer year;
         Integer mileage;
-        Pattern pattern = Pattern.compile("^[A-Z][A-Z]{1}\\d{4}[A-Z][A-Z]$");
-        Matcher matcher;
-        do {
-            System.out.println("Введите регистрационный номер автомобиля:");
-            reg = sc.nextLine();
-            matcher = pattern.matcher(reg);
-            if (!matcher.find(0)) {
-                System.out.println("Недопустимый формат регистрационного номера. Необходимо повторить процедуру ввода.");
-            }
-        } while (!matcher.find(0));
+        String reg = checkValidity();
         System.out.println("Введите марку автомобиля:");
         brand = sc.nextLine();
         System.out.println("Введите модель автомобиля:");
@@ -300,6 +281,22 @@ public class CarList {
         System.out.println("Введите пробег автомобиля:");
         mileage = sc.nextInt();
         return new Car(vin, reg, brand, model, year, mileage);
+    }
+
+    public static String checkValidity () {
+        String reg;
+        Scanner sc = new Scanner(System.in);
+        Pattern pattern = Pattern.compile("(^[A-Z]{2}\\d{4}[A-Z]{2}$)|(^[А-Я]{2}\\d{4}[А-Я]{2}$)");
+        Matcher matcher;
+        do {
+            System.out.println("Введите регистрационный номер автомобиля:");
+            reg = sc.nextLine();
+            matcher = pattern.matcher(reg);
+            if (!matcher.find(0)) {
+                System.out.println("Недопустимый формат регистрационного номера. Необходимо повторить процедуру ввода.");
+            }
+        } while (!matcher.find(0));
+        return reg;
     }
 
 }
