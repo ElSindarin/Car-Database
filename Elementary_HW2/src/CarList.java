@@ -4,10 +4,9 @@ import java.util.regex.Pattern;
 
 public class CarList {
 
-    Map<String, Car> carList = new HashMap<>();
-    Set<String> keys = new TreeSet<String>();
+    private Map<String, Car> carList = new HashMap<>();
 
-    public Car createCar() {
+    private Car createCar() throws InputMismatchException {
         Scanner sc = new Scanner(System.in);
         String vin;
         System.out.println("Введите VIN-код автомобиля");
@@ -17,18 +16,20 @@ public class CarList {
 
     public void addCar() {
         System.out.println("Для добавления нового автомобиля в базу данных, необходимо ввести данные.");
-        Car car = createCar();
-        carList.put(car.getVin(), car);
-        System.out.println("Автомобиль с регистрационным номером " + car.getRegNumber() + " был успешно добавлен в базу данных");
+        try {
+            Car car = createCar();
+            carList.put(car.getVin(), car);
+            System.out.println("Автомобиль с регистрационным номером " + car.getRegNumber() + " был успешно добавлен в базу данных");
+        } catch (InputMismatchException e) {
+            System.out.println("Неверный формат ввода данных. Повторите всю процедуру заново");
+            addCar();
+        }
+
     }
 
-    // Переделать. Не удалять машину, а поменять поля уже существующей.
-    // Спросить, как же мне изменять данные, если нет сеттеров (инкапсуляция)
-    public void editCar() {
+    public void editCar() throws NoSuchElementException {
         System.out.println("Для редактирования информации об автомобиле введите VIN-код (либо введите 0, чтобы вернуться в меню):");
         String regNumber;
-        Car editedCar;
-        boolean wasEdited = false;
         Scanner sc = new Scanner(System.in);
         regNumber = sc.nextLine();
         if (!regNumber.equals("0")) {
@@ -44,15 +45,10 @@ public class CarList {
                 carList.get(regNumber).setYear(sc.nextInt());
                 System.out.println("Введите пробег автомобиля:");
                 carList.get(regNumber).setMileage(sc.nextInt());
-                //editedCar = assignDataToVin(regNumber);
-                //carList.put(editedCar.getVin(),editedCar);
-                wasEdited = true;
-                editCar();
+            } else {
+                throw new NoSuchElementException("Автомобиль с указанным VIN-кодом отсутствует в базе данных!");
             }
-            if (!wasEdited) {
-                System.out.println("Автомобиль с указанным VIN-кодом отсутствует в базе данных");
-                editCar();
-            }
+            editCar();
         } else {
             return;
         }
@@ -60,23 +56,21 @@ public class CarList {
 
     // Методы удаления
 
-    public void removeCar() {
+    public void removeCar() throws NoSuchElementException {
         System.out.println("Для удаления информации об автомобиле введите VIN-код (либо введите 0, чтобы вернуться в меню:");
         String regNumber;
-        boolean wasDeleted = false;
         Scanner sc = new Scanner(System.in);
         regNumber = sc.nextLine();
         if (!regNumber.equals("0")) {
             if (carList.containsKey(regNumber)) {
                 System.out.println("В базе данных найдена машина с указанным VIN-кодом. Переходим к удалению информации");
                 carList.remove(regNumber);
-                wasDeleted = true;
                 removeCar();
             }
-            if (!wasDeleted) {
-                System.out.println("Автомобиль с указанным VIN-кодом отсутствует в базе данных");
-                removeCar();
+            else {
+                throw new NoSuchElementException("Автомобиль с указанным VIN-кодом отсутствует в базе данных");
             }
+            removeCar();
         } else {
             return;
         }
@@ -110,30 +104,26 @@ public class CarList {
 
     // Поисковые методы
 
-    public void searchCarByVIN() {
+    public void searchCarByVIN() throws NoSuchElementException {
         System.out.println("Для нахождения информации об автомобиле по VIN-коду введите VIN-код (либо введите 0, чтобы вернуться в меню)");
         String regNumber;
-        boolean wasFound = false;
         Scanner sc = new Scanner(System.in);
         regNumber = sc.nextLine();
         if (!regNumber.equals("0")) {
             if (carList.containsKey(regNumber)) {
                 System.out.println("В базе данных найдена машина с указанным VIN-кодом.");
                 System.out.println(carList.get(regNumber).toString());
-                wasFound = true;
                 searchCarByVIN();
-
+            } else {
+                throw new NoSuchElementException("Автомобиль с указанным VIN-кодом отсутствует в базе данных");
             }
-            if (!wasFound) {
-                System.out.println("Автомобиль с указанным VIN-кодом отсутствует в базе данных");
-                searchCarByVIN();
-            }
+            searchCarByVIN();
         } else {
             return;
         }
     }
 
-    public void searchCarByRegNum() {
+    public void searchCarByRegNum() throws NoSuchElementException {
         System.out.println("Для нахождения информации об автомобиле по регистрационному номеру введите регистрационный номер (либо введите 0, чтобы вернуться в меню)");
         String regNumber;
         boolean wasFound = false;
@@ -145,13 +135,12 @@ public class CarList {
                     System.out.println("В базе данных найдена машина с указанным регистрационным номером.");
                     System.out.println(car.toString());
                     wasFound = true;
-                    searchCarByRegNum();
                 }
             }
-            if (!wasFound) {
-                System.out.println("Автомобиль с указанным регистрационным номером отсутствует в базе данных");
-                searchCarByRegNum();
+            if (!wasFound){
+                throw new NoSuchElementException("Автомобиль с указанным регистрационным номером отсутствует в базе данных");
             }
+            searchCarByRegNum();
         } else {
             return;
         }
@@ -171,7 +160,11 @@ public class CarList {
                     searchResult.carList.put(car.getVin(),car);
                 }
             }
-            searchResult.showCarList(searchResult);
+            try {
+                searchResult.showCarList(searchResult);
+            } catch (EmptyDataBaseException e) {
+                System.out.println(e.getMessage());
+            }
             searchCarByMarkAndModel();
         } else {
             return;
@@ -192,7 +185,11 @@ public class CarList {
                     searchResult.carList.put(car.getVin(), car);
                 }
             }
-            searchResult.showCarList(searchResult);
+            try {
+                searchResult.showCarList(searchResult);
+            } catch (EmptyDataBaseException e) {
+                System.out.println(e.getMessage());
+            }
             searchCarByYearRange();
         } else {
             return;
@@ -213,7 +210,11 @@ public class CarList {
                     searchResult.carList.put(car.getVin(),car);
                 }
             }
-            searchResult.showCarList(searchResult);
+            try {
+                searchResult.showCarList(searchResult);
+            } catch (EmptyDataBaseException e) {
+                System.out.println(e.getMessage());
+            }
             searchCarByMileage();
         } else {
             return;
@@ -252,9 +253,9 @@ public class CarList {
 
     // Утилитные методы
 
-    public void showCarList(CarList carDataBase) {
+    public void showCarList(CarList carDataBase) throws EmptyDataBaseException{
         if (carDataBase.carList.size() == 0) {
-            System.out.println("Нет данных для отображения!");
+            throw new EmptyDataBaseException("Нет данных для отображения!");
         } else {
             System.out.println("По данному запросу найдены следующие автомобили");
             int i = 0;

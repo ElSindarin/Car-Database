@@ -23,7 +23,11 @@ public class Main {
                     break;
                 }
                 case 3: {
-                    carDataBase.editCar();
+                    try {
+                        carDataBase.editCar();
+                    } catch (NoSuchElementException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 }
                 case 4: {
@@ -56,11 +60,19 @@ public class Main {
             number = sc.nextByte();
             switch (number) {
                 case 1: {
-                    carDataBase.searchCarByVIN();
+                    try {
+                        carDataBase.searchCarByVIN();
+                    } catch (NoSuchElementException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 }
                 case 2: {
-                    carDataBase.searchCarByRegNum();
+                    try {
+                        carDataBase.searchCarByRegNum();
+                    } catch (NoSuchElementException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 }
                 case 3: {
@@ -76,7 +88,11 @@ public class Main {
                     break;
                 }
                 case 7: {
-                    carDataBase.showCarList(carDataBase);
+                    try {
+                        carDataBase.showCarList(carDataBase);
+                    } catch (EmptyDataBaseException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 }
                 case 0: {
@@ -99,7 +115,11 @@ public class Main {
             number = sc.nextByte();
             switch (number) {
                 case 1: {
+                    try {
                     carDataBase.removeCar();
+                    } catch (NoSuchElementException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 }
                 case 2: {
